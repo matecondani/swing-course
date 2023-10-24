@@ -20,6 +20,14 @@ public class MainFrame extends JFrame {
 
         toolbar.setStringListener(textPanel::appendText);
 
+        formPanel.setFormListener(new FormListener() {
+            public void formEventOccurred(FormEvent e) {
+                String name = e.getName();
+                String occupation = e.getOccupation();
+                textPanel.appendText(name + ": " + occupation + "\n");
+            }
+        });
+
         add(textPanel, BorderLayout.CENTER);
         add(toolbar, BorderLayout.NORTH);
         add(formPanel, BorderLayout.WEST);
