@@ -1,4 +1,4 @@
-package src;
+package src.gui;
 
 import java.util.EventObject;
 

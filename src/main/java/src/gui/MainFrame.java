@@ -1,4 +1,4 @@
-package src;
+package src.gui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,6 +24,8 @@ public class MainFrame extends JFrame {
         formPanel = new FormPanel();
 
         fileChooser = new JFileChooser();
+        fileChooser.addChoosableFileFilter(new PersonFileFilter());
+        fileChooser.setAcceptAllFileFilterUsed(false);
 
         setJMenuBar(createMenuBar());
 
