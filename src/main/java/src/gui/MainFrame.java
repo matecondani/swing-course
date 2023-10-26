@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.*;
+import src.controller.Controller;
 
 public class MainFrame extends JFrame {
 
@@ -13,6 +14,7 @@ public class MainFrame extends JFrame {
     private Toolbar toolbar;
     private FormPanel formPanel;
     private JFileChooser fileChooser;
+    private Controller controller;
 
     public MainFrame() {
         super("Hello World");
@@ -22,6 +24,8 @@ public class MainFrame extends JFrame {
         textPanel = new TextPanel();
         toolbar = new Toolbar();
         formPanel = new FormPanel();
+
+        controller = new Controller();
 
         fileChooser = new JFileChooser();
         fileChooser.addChoosableFileFilter(new PersonFileFilter());
@@ -33,13 +37,7 @@ public class MainFrame extends JFrame {
 
         formPanel.setFormListener(new FormListener() {
             public void formEventOccurred(FormEvent e) {
-                String name = e.getName();
-                String occupation = e.getOccupation();
-                int ageCat = e.getAgeCategory();
-                String empCat = e.getEmpCat();
-                String gender = e.getGender();
-                textPanel.appendText(name + ": " + occupation + ": " + ageCat + ": " + empCat + "\n");
-                System.out.println(gender);
+                controller.addPerson(e);
             }
         });
 
@@ -47,7 +45,7 @@ public class MainFrame extends JFrame {
         add(toolbar, BorderLayout.NORTH);
         add(formPanel, BorderLayout.WEST);
 
-        setMinimumSize(new Dimension(500,400));
+        setMinimumSize(new Dimension(500, 400));
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -91,15 +89,17 @@ public class MainFrame extends JFrame {
         exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
 
         importDataItem.addActionListener(e -> {
-            if (fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION){
+            if (fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
                 System.out.println(fileChooser.getSelectedFile());
-            };
+            }
+            ;
         });
 
         exportDataItem.addActionListener(e -> {
-            if (fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION){
+            if (fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
                 System.out.println(fileChooser.getSelectedFile());
-            };
+            }
+            ;
         });
 
         exitItem.addActionListener(e -> {
