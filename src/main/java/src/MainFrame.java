@@ -3,6 +3,8 @@ package src;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import javax.swing.*;
 
 public class MainFrame extends JFrame {
@@ -76,6 +78,14 @@ public class MainFrame extends JFrame {
 
         menuBar.add(fileMenu);
         menuBar.add(windowMenu);
+
+        fileMenu.setMnemonic(KeyEvent.VK_F);
+        exitItem.setMnemonic(KeyEvent.VK_X);
+
+        exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
+
+        exitItem.addActionListener(e -> System.exit(0));
+
         return menuBar;
     }
 }

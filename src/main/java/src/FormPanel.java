@@ -1,6 +1,7 @@
 package src;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -36,6 +37,14 @@ public class FormPanel extends JPanel {
         citizenCheck = new JCheckBox();
         taxField = new JTextField(10);
         taxLabel = new JLabel("Tax ID: ");
+
+        okBtn = new JButton("OK");
+
+        //Set up Mnemonics
+        okBtn.setMnemonic(KeyEvent.VK_O);
+
+        nameLabel.setDisplayedMnemonic(KeyEvent.VK_N);
+        nameLabel.setLabelFor(nameField);
 
         maleRadio = new JRadioButton("male");
         femaleRadio = new JRadioButton("female");
@@ -83,7 +92,7 @@ public class FormPanel extends JPanel {
         empCombo.setSelectedIndex(0);
 //        empCombo.setEditable(true);
 
-        okBtn = new JButton("OK");
+
 
         okBtn.addActionListener(event -> {
             String name = nameField.getText();
