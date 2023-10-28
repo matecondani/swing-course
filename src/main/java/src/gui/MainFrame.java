@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import javax.swing.*;
 import src.controller.Controller;
 
@@ -15,6 +16,7 @@ public class MainFrame extends JFrame {
     private FormPanel formPanel;
     private JFileChooser fileChooser;
     private Controller controller;
+    private TablePanel tablePanel;
 
     public MainFrame() {
         super("Hello World");
@@ -24,11 +26,14 @@ public class MainFrame extends JFrame {
         textPanel = new TextPanel();
         toolbar = new Toolbar();
         formPanel = new FormPanel();
+        tablePanel = new TablePanel();
 
         controller = new Controller();
+        tablePanel.setData(controller.getPeople());
 
         fileChooser = new JFileChooser();
         fileChooser.addChoosableFileFilter(new PersonFileFilter());
+
         fileChooser.setAcceptAllFileFilterUsed(false);
 
         setJMenuBar(createMenuBar());
@@ -38,10 +43,12 @@ public class MainFrame extends JFrame {
         formPanel.setFormListener(new FormListener() {
             public void formEventOccurred(FormEvent e) {
                 controller.addPerson(e);
+                tablePanel.refresh();
             }
         });
 
-        add(textPanel, BorderLayout.CENTER);
+//        add(textPanel, BorderLayout.CENTER);
+        add(tablePanel, BorderLayout.CENTER);
         add(toolbar, BorderLayout.NORTH);
         add(formPanel, BorderLayout.WEST);
 
@@ -87,17 +94,27 @@ public class MainFrame extends JFrame {
         exitItem.setMnemonic(KeyEvent.VK_X);
 
         exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
+        importDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK));
 
         importDataItem.addActionListener(e -> {
             if (fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
-                System.out.println(fileChooser.getSelectedFile());
+                try {
+                    controller.loadFromFile(fileChooser.getSelectedFile());
+                    tablePanel.refresh();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(MainFrame.this, "Could not load data from file.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             ;
         });
 
         exportDataItem.addActionListener(e -> {
             if (fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
-                System.out.println(fileChooser.getSelectedFile());
+                try {
+                    controller.saveToFile(fileChooser.getSelectedFile());
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(MainFrame.this, "Could not save data from file.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             ;
         });

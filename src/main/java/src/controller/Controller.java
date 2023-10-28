@@ -1,5 +1,8 @@
 package src.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import src.gui.FormEvent;
 import src.model.AgeCategory;
 import src.model.Database;
@@ -9,6 +12,10 @@ import src.model.Person;
 
 public class Controller {
     Database db = new Database();
+
+    public List<Person> getPeople(){
+        return db.getPeople();
+    }
 
     public void addPerson(FormEvent ev) {
         String name = ev.getName();
@@ -37,5 +44,13 @@ public class Controller {
         Person person = new Person(name, occupation, ageCategory, employmentCategory, taxId, usCitizen, genderCat);
 
         db.addPerson(person);
+    }
+
+    public void saveToFile(File file) throws IOException {
+        db.saveToFile(file);
+    }
+
+    public void loadFromFile(File file) throws IOException {
+        db.loadFromFile(file);
     }
 }
