@@ -6,16 +6,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Database {
 
-    private ArrayList<Person> people;
+    private List<Person> people;
 
     public Database() {
-        this.people = new ArrayList<Person>();
+        this.people = new LinkedList<Person>();
     }
 
     public void addPerson(Person person) {
@@ -23,7 +24,7 @@ public class Database {
     }
 
     public List<Person> getPeople() {
-        return people;
+        return Collections.unmodifiableList(people);
     }
 
     public void saveToFile(File file) throws IOException {
@@ -47,5 +48,9 @@ public class Database {
             throw new RuntimeException(e);
         }
         ois.close();
+    }
+
+    public void removePerson(int index) {
+        people.remove(index);
     }
 }

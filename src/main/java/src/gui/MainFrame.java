@@ -17,6 +17,7 @@ public class MainFrame extends JFrame {
     private JFileChooser fileChooser;
     private Controller controller;
     private TablePanel tablePanel;
+    private PrefsDialog prefsDialog;
 
     public MainFrame() {
         super("Hello World");
@@ -27,9 +28,17 @@ public class MainFrame extends JFrame {
         toolbar = new Toolbar();
         formPanel = new FormPanel();
         tablePanel = new TablePanel();
+        prefsDialog = new PrefsDialog(this);
 
         controller = new Controller();
+
         tablePanel.setData(controller.getPeople());
+        tablePanel.addPersonTableListener(new PersonTableListener(){
+            @Override
+           public void rowDeleted(int row){
+                controller.removePerson(row);
+            }
+        });
 
         fileChooser = new JFileChooser();
         fileChooser.addChoosableFileFilter(new PersonFileFilter());
@@ -62,6 +71,7 @@ public class MainFrame extends JFrame {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu windowMenu = new JMenu("Window");
+        JMenuItem prefsItem = new JMenuItem("Preferences...");
 
         JMenu fileMenu = new JMenu("File");
         JMenuItem exportDataItem = new JMenuItem("Export data...");
@@ -86,6 +96,7 @@ public class MainFrame extends JFrame {
         });
         showMenu.add(showFormItem);
         windowMenu.add(showMenu);
+        windowMenu.add(prefsItem);
 
         menuBar.add(fileMenu);
         menuBar.add(windowMenu);
@@ -95,6 +106,10 @@ public class MainFrame extends JFrame {
 
         exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
         importDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK));
+
+        prefsItem.addActionListener(e -> {
+            prefsDialog.setVisible(true);
+        });
 
         importDataItem.addActionListener(e -> {
             if (fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
