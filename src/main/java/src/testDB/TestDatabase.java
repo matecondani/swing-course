@@ -1,7 +1,6 @@
 package src.testDB;
 
 import java.sql.SQLException;
-import javax.xml.crypto.Data;
 import src.model.AgeCategory;
 import src.model.Database;
 import src.model.EmploymentCategory;
@@ -19,8 +18,8 @@ public class TestDatabase {
             e.printStackTrace();
         }
 
-        db.addPerson(new Person("joe", "builder", AgeCategory.ADULT, EmploymentCategory.employed,"777",true, Gender.MALE));
-        db.addPerson(new Person("sue", "artist", AgeCategory.SENIOR, EmploymentCategory.selfEmployed,null,true, Gender.FEMALE));
+        db.addPerson(new Person("joe", "builder", AgeCategory.ADULT, EmploymentCategory.employed, "777", true, Gender.MALE));
+        db.addPerson(new Person("sue", "artist", AgeCategory.SENIOR, EmploymentCategory.selfEmployed, null, false, Gender.FEMALE));
 
         try {
             db.save();

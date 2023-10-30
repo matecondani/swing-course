@@ -83,14 +83,43 @@ public class Database {
     public void save() throws SQLException {
         String checkSql = "select count(*) as count from people where id =?";
         PreparedStatement checkStatement = con.prepareStatement(checkSql);
+        String insertSql = "insert into people (id, name, age, employment_status, tax_id, us_citizen, gender, occupation) values (?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement insertStatement = con.prepareStatement(insertSql);
         for (Person person : people) {
             int id = person.getId();
+
+            String name = person.getName();
+            String occupation = person.getOccupation();
+            AgeCategory age = person.getAgeCategory();
+            EmploymentCategory emp = person.getEmpCat();
+            String tax = person.getTaxId();
+            boolean isUS = person.isUsCitizen();
+            Gender gender = person.getGender();
+
+
             checkStatement.setInt(1, id);
             ResultSet checkResult = checkStatement.executeQuery();
             checkResult.next();
             int count = checkResult.getInt(1);
-            System.out.println("count for person with id " + id + " is " + count);
+            if (count == 0) {
+                System.out.println("Inserting person with id " + id);
+                int col = 1;
+                insertStatement.setInt(col++, id);
+                insertStatement.setString(col++, name);
+                insertStatement.setString(col++, age.name());
+                insertStatement.setString(col++, emp.name());
+                insertStatement.setString(col++, tax);
+                insertStatement.setBoolean(col++, isUS);
+                insertStatement.setString(col++, gender.name());
+                insertStatement.setString(col, occupation);
+                insertStatement.executeUpdate();
+            } else {
+                System.out.println("updating person with id " + id);
+            }
+//            System.out.println("count for person with id " + id + " is " + count);
         }
+        insertStatement.close();
+        checkStatement.close();
     }
 
     public void removePerson(int index) {
