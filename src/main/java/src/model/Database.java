@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -83,8 +84,13 @@ public class Database {
     public void save() throws SQLException {
         String checkSql = "select count(*) as count from people where id =?";
         PreparedStatement checkStatement = con.prepareStatement(checkSql);
+
         String insertSql = "insert into people (id, name, age, employment_status, tax_id, us_citizen, gender, occupation) values (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement insertStatement = con.prepareStatement(insertSql);
+
+        String updateSql = "update people set name=?, age=?, employment_status=?, tax_id=?, us_citizen=?, gender=?, occupation=? where id=?";
+        PreparedStatement updateStatement = con.prepareStatement(updateSql);
+
         for (Person person : people) {
             int id = person.getId();
 
@@ -115,11 +121,47 @@ public class Database {
                 insertStatement.executeUpdate();
             } else {
                 System.out.println("updating person with id " + id);
+                int col = 1;
+                updateStatement.setString(col++, name);
+                updateStatement.setString(col++, age.name());
+                updateStatement.setString(col++, emp.name());
+                updateStatement.setString(col++, tax);
+                updateStatement.setBoolean(col++, isUS);
+                updateStatement.setString(col++, gender.name());
+                updateStatement.setString(col++, occupation);
+                updateStatement.setInt(col, id);
+                updateStatement.executeUpdate();
             }
-//            System.out.println("count for person with id " + id + " is " + count);
         }
         insertStatement.close();
         checkStatement.close();
+        updateStatement.close();
+    }
+
+    public void load() throws SQLException {
+        people.clear();
+
+        String sql = "select id, name, age, employment_status, tax_id, us_citizen, gender, occupation from people order by name";
+        Statement selectStatement = con.createStatement();
+
+        ResultSet results = selectStatement.executeQuery(sql);
+
+        while (results.next()) {
+            int id = results.getInt("id");
+            String name = results.getString("name");
+            String age = results.getString("age");
+            String employmentStatus = results.getString("employment_status");
+            String taxId = results.getString("tax_id");
+            boolean usCitizen = results.getBoolean("us_citizen");
+            String gender = results.getString("gender");
+            String occupation = results.getString("occupation");
+            Person person = new Person(id, name, occupation, AgeCategory.valueOf(age), EmploymentCategory.valueOf(employmentStatus), taxId, usCitizen, Gender.valueOf(gender));
+            people.add(person);
+            System.out.println(person);
+        }
+
+        results.close();
+        selectStatement.close();
     }
 
     public void removePerson(int index) {

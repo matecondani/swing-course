@@ -26,6 +26,11 @@ public class TestDatabase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        try {
+            db.load();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         db.disconnect();
     }
 }
