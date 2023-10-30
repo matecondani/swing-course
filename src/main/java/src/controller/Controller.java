@@ -25,7 +25,7 @@ public class Controller {
     public void save() throws SQLException {
         db.save();
     }
-    public void close(){
+    public void disconnect(){
         db.disconnect();
     }
 
